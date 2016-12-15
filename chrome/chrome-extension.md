@@ -41,4 +41,4 @@
 这个插件可以模拟*nux中vim编辑器操作方式来操作Chrome，通过它可以完全脱离鼠标触控板来浏览页面，用来装那么一下是极好的，对于非vimer掌握需要花费点功夫。
 
 ###[BaiduExporter](https://github.com/acgotaku/BaiduExporter)
-这个插件可以将百度网盘下载方式转行成aria2方式下载
+这个插件可以方便的把百度网盘的下载地址导出到 aria2/aria2-rpc，支持 YAAW。
