@@ -1,0 +1,5 @@
+Unrecognized Windows Sockets error: 10106: create
+1，以管理员身份打开命令提示符
+2，输入 netsh winsock reset
+3，重启电脑就ok了
+先检查网络用的是家庭网络，还是工作网络。如果选择的是家庭网络模式，死活都不行，最后选择了工作网络模式就好了。
