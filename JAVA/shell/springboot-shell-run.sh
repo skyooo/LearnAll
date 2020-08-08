@@ -1,8 +1,8 @@
 #!/bin/bash
 #set -euxo pipefail
 # 2. 请给本脚本设备可执行权限
-# 3. 启动示例         start.sh "/home/work/side-middle-office/java/xx.jar" "test" "start" "Started Application in" "/home/work/project/java/logs/sys-info.log"
-# 4. 重启示例         start.sh "/home/work/side-middle-office/java/xx.jar" "test" "restart" "Started Application in" "/home/work/project/java/logs/sys-info.log"
+# 3. 启动示例         start.sh "/home/work/side-middle-office/java/xx.jar" "test" "start" "/home/work/project/java/logs/sys-info.log" "Started Application in"
+# 4. 重启示例         start.sh "/home/work/side-middle-office/java/xx.jar" "test" "restart" "/home/work/project/java/logs/sys-info.log" "Started Application in"
 # 5. 停止示例         start.sh "xx" "stop"
 # 6. 查看状态示例     start.sh "xx" "check"
 
@@ -17,11 +17,17 @@ OPERATE=$3
 SYSTEM=`uname`
 RUNNING="false";
 
-keywords=$4
-logfile=$5
+keywords=$5
+logfile=$4
+keywordRegular="[Started[:space:]\w*Application[:space:]in[:space:]][0-9\.\-]*seconds"
 #keywords="Started Application in"
 #logfile="/home/work/project/java/logs/sys-info.log"
-
+if [ ! $keywords ]; then
+  echo "判断启动成功日志判断关键字未传..则默认使用正则表达式"
+else
+  echo "判断启动成功日志判断关键字已传..不使用默认正则表达式.$keywords"
+  keywordRegular=$5
+fi
 echo "启动jar服务...$APP_NAME | spring.profiles.active=$profiles | 操作类型=$3"
 
 
@@ -63,7 +69,8 @@ function start() {
 		`nohup java -jar ${JAR_NAME} --name=${APP_NAME} --spring.profiles.active=${profiles} > /dev/null 2>&1 &`
         #sleep 20
 	    # { sed /"$keywords"/q; exit 1; }< <(exec timeout 2m tail -Fn 0 $logfile)
-		{ sed /"$keywords"/q; kill $!; } < <(exec timeout 2m tail -Fn 0 $logfile)
+		 { sed /"$keywordRegular"/q; kill $!; } < <(exec timeout 2m tail -Fn 0 $logfile)
+        # { sed /[Started[:space:]\w*Application[:space:]in[:space:]][0-9\.\-]*seconds/q; kill $!; } < <(exec timeout 2m tail -Fn 0 $logfile)
 		check
 		echo "Start success!"
 	fi
